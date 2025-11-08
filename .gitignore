@@ -1,5 +1,26 @@
+# Visual Studio / Rider
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build outputs
 bin/
 obj/
-/packages/
-riderModule.iml
-/_ReSharper.Caches/
+out/
+
+# EF Migrations (opcional si quieres regenerarlas)
+**/Migrations/
+
+# Rider settings
+*.sln.iml
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nuget.cache
+
+# Archivos sensibles
+Magnus.Api/appsettings.json

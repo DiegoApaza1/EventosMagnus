@@ -1,15 +1,10 @@
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using Magnus.Application.Interfaces;
 
 namespace Magnus.Infrastructure.Services
 {
-    public interface IEmailService
-    {
-        Task SendEmailAsync(string to, string subject, string body);
-        
-    }
-
     public class EmailService : IEmailService
     {
         private readonly SmtpClient _smtpClient;

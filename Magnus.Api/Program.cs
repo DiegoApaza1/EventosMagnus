@@ -13,19 +13,25 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // 🔹 Configurar PostgreSQL con EF Core
-builder.Services.AddDbContext<MagnusDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
-
-// Configurar la conexión a PostgreSQL
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 builder.Services.AddDbContext<MagnusDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // 🔹 Inyección de dependencias (UnitOfWork, EmailService)
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); // UnitOfWork en Magnus.Infrastructure
+builder.Services.AddScoped<Magnus.Application.Interfaces.IEmailService, Magnus.Infrastructure.Services.EmailService>();
 
-// Si quieres inyectar los handlers directamente:
+// Handlers de Usuarios
 builder.Services.AddScoped<RegistrarUsuarioCommandHandler>();
+
+// Handlers de Eventos (CQRS completo)
 builder.Services.AddScoped<CrearEventoCommandHandler>();
+builder.Services.AddScoped<Magnus.Application.Features.Eventos.Commands.ActualizarEvento.ActualizarEventoCommandHandler>();
+builder.Services.AddScoped<Magnus.Application.Features.Eventos.Commands.EliminarEvento.EliminarEventoCommandHandler>();
+builder.Services.AddScoped<Magnus.Application.Features.Eventos.Queries.ObtenerEventoPorId.ObtenerEventoPorIdQueryHandler>();
+builder.Services.AddScoped<Magnus.Application.Features.Eventos.Queries.ListarEventosPorOrganizador.ListarEventosPorOrganizadorQueryHandler>();
+
+// Handlers de Proveedores
 builder.Services.AddScoped<BuscarProveedoresQueryHandler>();
 
 // 🔹 Hangfire

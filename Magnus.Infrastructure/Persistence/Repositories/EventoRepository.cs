@@ -13,13 +13,22 @@ namespace Magnus.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Evento>> GetAllAsync() => await _context.Eventos.Include(e => e.Organizador).ToListAsync();
-        public async Task<Evento?> GetByIdAsync(Guid id) => await _context.Eventos.Include(e => e.Organizador).FirstOrDefaultAsync(e => e.Id == id);
-        public async Task AddAsync(Evento evento) => await _context.Eventos.AddAsync(evento);
-        public void Update(Evento evento) => _context.Eventos.Update(evento);
-        public void Delete(Evento evento) => _context.Eventos.Remove(evento);
+        public async Task<IEnumerable<Evento>> GetAllAsync() 
+            => await _context.Eventos.Include(e => e.Organizador).ToListAsync();
+
+        public async Task<Evento?> GetByIdAsync(Guid id) 
+            => await _context.Eventos.Include(e => e.Organizador).FirstOrDefaultAsync(e => e.Id == id);
 
         public async Task<IEnumerable<Evento>> GetByOrganizadorIdAsync(Guid organizadorId)
-            => await _context.Eventos.Where(e => e.OrganizadorId == organizadorId).ToListAsync();
+            => await _context.Eventos.Include(e => e.Organizador).Where(e => e.OrganizadorId == organizadorId).ToListAsync();
+
+        public async Task AddAsync(Evento evento) 
+            => await _context.Eventos.AddAsync(evento);
+
+        public void Update(Evento evento) 
+            => _context.Eventos.Update(evento);
+
+        public void Delete(Evento evento) 
+            => _context.Eventos.Remove(evento);
     }
 }

@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using Magnus.Application.DTOs;
 
 namespace Magnus.Api.Middlewares
 {
@@ -30,12 +31,33 @@ namespace Magnus.Api.Middlewares
         private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
-            var result = JsonSerializer.Serialize(new
+            
+            // Determinar el código de estado según el tipo de excepción
+            var statusCode = exception switch
             {
-                error = exception.Message,
-                details = exception.InnerException?.Message
+                Magnus.Domain.Exceptions.DomainException => HttpStatusCode.BadRequest,
+                ArgumentException => HttpStatusCode.BadRequest,
+                InvalidOperationException => HttpStatusCode.BadRequest,
+                KeyNotFoundException => HttpStatusCode.NotFound,
+                UnauthorizedAccessException => HttpStatusCode.Unauthorized,
+                _ => HttpStatusCode.InternalServerError
+            };
+
+            context.Response.StatusCode = (int)statusCode;
+
+            // Crear lista de errores
+            var errors = new List<string> { exception.Message };
+            if (exception.InnerException != null)
+            {
+                errors.Add(exception.InnerException.Message);
+            }
+
+            // Usar ApiResponse para respuestas consistentes
+            var response = ApiResponse<object>.ErrorResponse(errors);
+            
+            var result = JsonSerializer.Serialize(response, new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
 
             return context.Response.WriteAsync(result);

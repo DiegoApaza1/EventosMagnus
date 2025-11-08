@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Magnus.Application.Interfaces;
 using Magnus.Application.Features.Eventos.Commands.CrearEvento;
+using Magnus.Application.DTOs;
+using Magnus.Application.Mappers;
 using Magnus.Domain.Entities;
 
 namespace Magnus.Application.Features.Eventos.Commands.CrearEvento
@@ -18,7 +20,7 @@ namespace Magnus.Application.Features.Eventos.Commands.CrearEvento
             _emailService = emailService;
         }
 
-        public async Task<Evento> Handle(CrearEventoCommand command, CancellationToken ct = default)
+        public async Task<EventoResponseDto> Handle(CrearEventoCommand command, CancellationToken ct = default)
         {
             var dto = command.Dto;
 
@@ -46,7 +48,8 @@ namespace Magnus.Application.Features.Eventos.Commands.CrearEvento
                 _ = _emailService.SendEmailAsync(organizador.Email, subject, body);
             }
 
-            return evento;
+            // Mapear a DTO antes de retornar
+            return evento.ToResponseDto();
         }
     }
 }

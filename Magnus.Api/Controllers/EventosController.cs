@@ -6,11 +6,13 @@ using Magnus.Application.Features.Eventos.Commands.ActualizarEvento;
 using Magnus.Application.Features.Eventos.Commands.EliminarEvento;
 using Magnus.Application.Features.Eventos.Queries.ObtenerEventoPorId;
 using Magnus.Application.Features.Eventos.Queries.ListarEventosPorOrganizador;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Magnus.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class EventosController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -49,6 +51,7 @@ namespace Magnus.Api.Controllers
         /// </summary>
         /// <response code="200">Evento encontrado</response>
         /// <response code="404">Evento no encontrado</response>
+        [AllowAnonymous]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ApiResponse<EventoResponseDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<EventoResponseDto>), StatusCodes.Status404NotFound)]
@@ -74,6 +77,7 @@ namespace Magnus.Api.Controllers
         /// Lista todos los eventos de un organizador
         /// </summary>
         /// <response code="200">Lista de eventos del organizador</response>
+        [AllowAnonymous]
         [HttpGet("organizador/{organizadorId}")]
         [ProducesResponseType(typeof(ApiResponse<IEnumerable<EventoResponseDto>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> ListarEventosPorOrganizador(Guid organizadorId)

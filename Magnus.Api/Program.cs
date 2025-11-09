@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using Magnus.Application.Interfaces;
 using Magnus.Infrastructure.Persistence.Repositories;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +23,7 @@ builder.Services.AddDbContext<MagnusDbContext>(options =>
 // 🔹 Inyección de dependencias (UnitOfWork, EmailService)
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); // UnitOfWork en Magnus.Infrastructure
 builder.Services.AddScoped<Magnus.Application.Interfaces.IEmailService, Magnus.Infrastructure.Services.EmailService>();
+builder.Services.AddScoped<Magnus.Application.Interfaces.ITokenService, Magnus.Infrastructure.Services.JwtTokenService>();
 
 // Handlers de Usuarios
 builder.Services.AddScoped<RegistrarUsuarioCommandHandler>();
@@ -54,6 +58,49 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1",
         Description = "API para la gestión de eventos"
     });
+
+    // JWT Bearer in Swagger
+    var securityScheme = new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Ingrese 'Bearer {token}'"
+    };
+    c.AddSecurityDefinition("Bearer", securityScheme);
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { securityScheme, new List<string>() }
+    });
+});
+
+// 🔹 Autenticación JWT
+var jwtIssuer = builder.Configuration["Jwt:Issuer"]
+                 ?? throw new InvalidOperationException("Jwt:Issuer no configurado");
+var jwtAudience = builder.Configuration["Jwt:Audience"]
+                   ?? throw new InvalidOperationException("Jwt:Audience no configurado");
+var jwtKey = builder.Configuration["Jwt:Key"]
+             ?? throw new InvalidOperationException("Jwt:Key no configurado");
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!)),
+        ClockSkew = TimeSpan.FromSeconds(30)
+    };
 });
 
 var app = builder.Build();
@@ -71,8 +118,6 @@ if (app.Environment.IsDevelopment())
 // Middleware global de excepciones
 app.UseGlobalExceptionHandling();
 
-app.MapControllers();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -83,8 +128,11 @@ if (app.Environment.IsDevelopment())
 // Hangfire Dashboard
 app.UseHangfireDashboard("/hangfire");
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseHttpsRedirection();
+
+app.MapControllers();
 
 var summaries = new[]
 {

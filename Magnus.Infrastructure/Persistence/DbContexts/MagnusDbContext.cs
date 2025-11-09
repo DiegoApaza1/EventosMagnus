@@ -8,6 +8,8 @@ namespace Magnus.Infrastructure.Persistence.DbContexts
         public MagnusDbContext(DbContextOptions<MagnusDbContext> options) : base(options) { }
 
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Organizador> Organizadores { get; set; }
+
         public DbSet<Evento> Eventos { get; set; }
         public DbSet<Proveedor> Proveedores { get; set; }
         public DbSet<Cotizacion> Cotizaciones { get; set; }

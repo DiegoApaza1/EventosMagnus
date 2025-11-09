@@ -79,9 +79,12 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // 🔹 Autenticación JWT
-var jwtIssuer = builder.Configuration["Jwt:Issuer"];
-var jwtAudience = builder.Configuration["Jwt:Audience"];
-var jwtKey = builder.Configuration["Jwt:Key"];
+var jwtIssuer = builder.Configuration["Jwt:Issuer"]
+                 ?? throw new InvalidOperationException("Jwt:Issuer no configurado");
+var jwtAudience = builder.Configuration["Jwt:Audience"]
+                   ?? throw new InvalidOperationException("Jwt:Audience no configurado");
+var jwtKey = builder.Configuration["Jwt:Key"]
+             ?? throw new InvalidOperationException("Jwt:Key no configurado");
 
 builder.Services.AddAuthentication(options =>
 {

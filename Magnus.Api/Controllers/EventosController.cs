@@ -24,11 +24,6 @@ namespace Magnus.Api.Controllers
             _emailService = emailService;
         }
 
-        /// <summary>
-        /// Crea un nuevo evento
-        /// </summary>
-        /// <response code="201">Evento creado exitosamente</response>
-        /// <response code="400">Datos de entrada inválidos</response>
         [HttpPost]
         [ProducesResponseType(typeof(ApiResponse<EventoResponseDto>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<EventoResponseDto>), StatusCodes.Status400BadRequest)]
@@ -46,11 +41,6 @@ namespace Magnus.Api.Controllers
             return CreatedAtAction(nameof(ObtenerEventoPorId), new { id = result.Id }, response);
         }
 
-        /// <summary>
-        /// Obtiene un evento por su ID
-        /// </summary>
-        /// <response code="200">Evento encontrado</response>
-        /// <response code="404">Evento no encontrado</response>
         [AllowAnonymous]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ApiResponse<EventoResponseDto>), StatusCodes.Status200OK)]
@@ -73,10 +63,6 @@ namespace Magnus.Api.Controllers
             return Ok(response);
         }
 
-        /// <summary>
-        /// Lista todos los eventos de un organizador
-        /// </summary>
-        /// <response code="200">Lista de eventos del organizador</response>
         [AllowAnonymous]
         [HttpGet("organizador/{organizadorId}")]
         [ProducesResponseType(typeof(ApiResponse<IEnumerable<EventoResponseDto>>), StatusCodes.Status200OK)]
@@ -94,12 +80,6 @@ namespace Magnus.Api.Controllers
             return Ok(response);
         }
 
-        /// <summary>
-        /// Actualiza un evento existente
-        /// </summary>
-        /// <response code="200">Evento actualizado exitosamente</response>
-        /// <response code="404">Evento no encontrado</response>
-        /// <response code="400">Datos de entrada inválidos</response>
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(ApiResponse<EventoResponseDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<EventoResponseDto>), StatusCodes.Status404NotFound)]
@@ -127,11 +107,6 @@ namespace Magnus.Api.Controllers
             return Ok(response);
         }
 
-        /// <summary>
-        /// Elimina un evento
-        /// </summary>
-        /// <response code="200">Evento eliminado exitosamente</response>
-        /// <response code="404">Evento no encontrado</response>
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]

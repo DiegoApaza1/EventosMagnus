@@ -24,23 +24,17 @@ namespace Magnus.Application.Features.Eventos.Commands.CrearEvento
         {
             var dto = command.Dto;
 
-            // Validaciones básicas
             if (string.IsNullOrWhiteSpace(dto.Titulo)) throw new ArgumentException("Titulo requerido.");
             if (dto.FechaInicio >= dto.FechaFin) throw new ArgumentException("FechaInicio debe ser anterior a FechaFin.");
             if (dto.Capacidad < 0) throw new ArgumentException("Capacidad inválida.");
 
-            // (Opcional) validar que existan organizador
             var organizador = await _uow.Usuarios.GetByIdAsync(dto.OrganizadorId);
             if (organizador == null) throw new InvalidOperationException("Organizador no encontrado.");
 
-            // Crear entidad de dominio
             var evento = new Evento(dto.Titulo, dto.FechaInicio, dto.FechaFin, dto.Lugar, dto.Capacidad, dto.OrganizadorId, dto.Descripcion);
 
-            // Persistir
             await _uow.Eventos.AddAsync(evento);
             await _uow.CommitAsync();
-
-            // Notificar al organizador (opcional)
             if (_emailService != null)
             {
                 var subject = $"Evento creado: {evento.Titulo}";
@@ -48,7 +42,6 @@ namespace Magnus.Application.Features.Eventos.Commands.CrearEvento
                 _ = _emailService.SendEmailAsync(organizador.Email, subject, body);
             }
 
-            // Mapear a DTO antes de retornar
             return evento.ToResponseDto();
         }
     }

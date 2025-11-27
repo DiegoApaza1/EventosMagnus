@@ -15,12 +15,10 @@ namespace Magnus.Application.Features.Eventos.Commands.ActualizarEvento
 
         public async Task<EventoResponseDto> Handle(ActualizarEventoCommand command, CancellationToken ct = default)
         {
-            // Buscar el evento existente
             var evento = await _uow.Eventos.GetByIdAsync(command.EventoId);
             if (evento == null)
                 throw new InvalidOperationException($"Evento con ID {command.EventoId} no encontrado.");
 
-            // Actualizar usando el método del dominio (mantiene las validaciones)
             evento.Update(
                 command.Titulo,
                 command.FechaInicio,
@@ -30,10 +28,8 @@ namespace Magnus.Application.Features.Eventos.Commands.ActualizarEvento
                 command.Descripcion
             );
 
-            // Guardar cambios
             await _uow.CommitAsync();
 
-            // Mapear a DTO antes de retornar
             return evento.ToResponseDto();
         }
     }

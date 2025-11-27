@@ -18,7 +18,6 @@ namespace Magnus.Infrastructure.Persistence.DbContexts
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configuración adicional (ejemplo: relaciones y restricciones)
             modelBuilder.Entity<Evento>()
                 .HasOne(e => e.Organizador)
                 .WithMany()

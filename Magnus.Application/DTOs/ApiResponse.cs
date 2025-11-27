@@ -1,9 +1,5 @@
 namespace Magnus.Application.DTOs
 {
-    /// <summary>
-    /// Respuesta genérica para APIs
-    /// </summary>
-    /// <typeparam name="T">Tipo de dato de la respuesta</typeparam>
     public class ApiResponse<T>
     {
         public bool Success { get; set; }

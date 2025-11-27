@@ -22,25 +22,18 @@ namespace Magnus.Api.Controllers
             _tokenService = tokenService;
         }
 
-        /// <summary>
-        /// Registro rápido de usuario (para pruebas)
-        /// </summary>
-        /// <response code="200">Usuario registrado exitosamente</response>
-        /// <response code="400">Datos de entrada inválidos</response>
         [AllowAnonymous]
         [HttpPost("registrar")]
         [ProducesResponseType(typeof(ApiResponse<UsuarioResponseDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<UsuarioResponseDto>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Registrar([FromBody] RegistroDto dto)
         {
-            // Crear usuario simple (sin hash de password por ahora)
             var passwordHash = ComputeSha256Hash(dto.Password);
             var usuario = new Usuario(dto.Nombre, dto.Email, passwordHash);
             
             await _unitOfWork.Usuarios.AddAsync(usuario);
             await _unitOfWork.CommitAsync();
 
-            // Retornar DTO en lugar de exponer la entidad
             var usuarioDto = usuario.ToResponseDto();
             var response = ApiResponse<UsuarioResponseDto>.SuccessResponse(
                 usuarioDto,
@@ -54,7 +47,6 @@ namespace Magnus.Api.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto credentials)
         {
-            // Buscar usuario por email
             var user = await _unitOfWork.Usuarios.GetByEmailAsync(credentials.Email);
             if (user == null)
             {

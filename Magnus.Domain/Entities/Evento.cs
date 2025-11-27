@@ -13,7 +13,7 @@ public class Evento
     public Guid OrganizadorId { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
-    private Evento() { } // EF
+    private Evento() { }
     
     public Usuario? Organizador { get; private set; }
 

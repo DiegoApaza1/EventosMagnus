@@ -1,8 +1,5 @@
 namespace Magnus.Application.DTOs
 {
-    /// <summary>
-    /// DTO de respuesta para Evento
-    /// </summary>
     public class EventoResponseDto
     {
         public Guid Id { get; set; }
@@ -15,13 +12,9 @@ namespace Magnus.Application.DTOs
         public Guid OrganizadorId { get; set; }
         public DateTime CreatedAt { get; set; }
         
-        // Información del organizador (opcional, para evitar consultas adicionales)
         public OrganizadorDto? Organizador { get; set; }
     }
 
-    /// <summary>
-    /// DTO anidado para información básica del organizador
-    /// </summary>
     public class OrganizadorDto
     {
         public Guid Id { get; set; }

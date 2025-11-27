@@ -17,7 +17,6 @@ namespace Magnus.Application.Features.Proveedores.Queries.BuscarProveedores
             var filtros = query.Filtros;
             var todos = await _uow.Proveedores.GetAllAsync();
 
-            // Aplicar filtro simple en memoria (si la tabla es muy grande, refactoriza para aplicar filtros en repositorio)
             var resultado = todos.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(filtros.NombreContains))

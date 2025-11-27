@@ -15,41 +15,30 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 🔹 Configurar PostgreSQL con EF Core
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 builder.Services.AddDbContext<MagnusDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// 🔹 Inyección de dependencias (UnitOfWork, EmailService)
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); // UnitOfWork en Magnus.Infrastructure
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<Magnus.Application.Interfaces.IEmailService, Magnus.Infrastructure.Services.EmailService>();
 builder.Services.AddScoped<Magnus.Application.Interfaces.ITokenService, Magnus.Infrastructure.Services.JwtTokenService>();
 
-// Handlers de Usuarios
 builder.Services.AddScoped<RegistrarUsuarioCommandHandler>();
 
-// Handlers de Eventos (CQRS completo)
 builder.Services.AddScoped<CrearEventoCommandHandler>();
 builder.Services.AddScoped<Magnus.Application.Features.Eventos.Commands.ActualizarEvento.ActualizarEventoCommandHandler>();
 builder.Services.AddScoped<Magnus.Application.Features.Eventos.Commands.EliminarEvento.EliminarEventoCommandHandler>();
 builder.Services.AddScoped<Magnus.Application.Features.Eventos.Queries.ObtenerEventoPorId.ObtenerEventoPorIdQueryHandler>();
 builder.Services.AddScoped<Magnus.Application.Features.Eventos.Queries.ListarEventosPorOrganizador.ListarEventosPorOrganizadorQueryHandler>();
 
-// Handlers de Proveedores
 builder.Services.AddScoped<BuscarProveedoresQueryHandler>();
 
-// 🔹 Hangfire
 builder.Services.AddHangfire(config => config.UseMemoryStorage());
 builder.Services.AddHangfireServer();
 
-// 🔹 Middlewares y controladores
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAntiforgery();
-
-
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -59,7 +48,6 @@ builder.Services.AddSwaggerGen(c =>
         Description = "API para la gestión de eventos"
     });
 
-    // JWT Bearer in Swagger
     var securityScheme = new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -76,7 +64,6 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// 🔹 Autenticación JWT
 var jwtIssuer = builder.Configuration["Jwt:Issuer"]
                  ?? throw new InvalidOperationException("Jwt:Issuer no configurado");
 var jwtAudience = builder.Configuration["Jwt:Audience"]
@@ -107,25 +94,21 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger(); // Carga el middleware de Swagger
+    app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "EventosMagnus API V1");
-        c.RoutePrefix = string.Empty; // Para abrir Swagger en /
+        c.RoutePrefix = string.Empty;
     });
 }
 
-// Middleware global de excepciones
 app.UseGlobalExceptionHandling();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.UseSwaggerUI();
 }
-
-// Hangfire Dashboard
 app.UseHangfireDashboard("/hangfire");
 app.UseRouting();
 app.UseAuthentication();
@@ -159,5 +142,4 @@ record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
 
-// Exponer el programa para pruebas (las instrucciones de nivel superior crean implícitamente una clase Programa).
 public partial class Program { }

@@ -16,15 +16,11 @@ namespace Magnus.Api.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        /// <summary>
-        /// Crea un nuevo organizador vinculado a un usuario existente
-        /// </summary>
         [HttpPost]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CrearOrganizador([FromBody] OrganizadorDto dto)
         {
-            // Validación básica
             var usuario = await _unitOfWork.Usuarios.GetByIdAsync(dto.UsuarioId);
             if (usuario == null)
             {
@@ -45,9 +41,6 @@ namespace Magnus.Api.Controllers
             return CreatedAtAction(nameof(ObtenerOrganizadorPorId), new { id = organizador.Id }, response);
         }
 
-        /// <summary>
-        /// Obtiene un organizador por su ID
-        /// </summary>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ApiResponse<Organizador>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
@@ -65,9 +58,6 @@ namespace Magnus.Api.Controllers
             return Ok(response);
         }
 
-        /// <summary>
-        /// Lista todos los organizadores
-        /// </summary>
         [HttpGet]
         [ProducesResponseType(typeof(ApiResponse<IEnumerable<Organizador>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> ListarOrganizadores()

@@ -8,7 +8,6 @@ public class Cotizacion
     public decimal Monto { get; private set; }
     public DateTime Fecha { get; private set; }
     
-    // 🔹 Relación con Evento
     public Evento? Evento { get; private set; }
 
     private Cotizacion() {}

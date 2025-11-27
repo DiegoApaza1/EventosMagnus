@@ -9,10 +9,8 @@ namespace Magnus.Domain.Entities
         public string Telefono { get; private set; }
         public Guid UsuarioId { get; private set; }
 
-        // Relación con Usuario
         public Usuario Usuario { get; private set; }
 
-        // Constructor completo
         public Organizador(string nombre, string telefono, Guid usuarioId)
         {
             Id = Guid.NewGuid();
@@ -21,7 +19,6 @@ namespace Magnus.Domain.Entities
             UsuarioId = usuarioId;
         }
 
-        // Constructor vacío para EF Core
         private Organizador() { }
     }
 }

@@ -3,9 +3,6 @@ using Magnus.Domain.Entities;
 
 namespace Magnus.Application.Mappers
 {
-    /// <summary>
-    /// Extensiones para mapear entidades a DTOs de respuesta
-    /// </summary>
     public static class EventoMapper
     {
         public static EventoResponseDto ToResponseDto(this Evento evento)

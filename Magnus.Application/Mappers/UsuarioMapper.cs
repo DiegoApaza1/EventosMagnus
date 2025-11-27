@@ -3,9 +3,6 @@ using Magnus.Domain.Entities;
 
 namespace Magnus.Application.Mappers
 {
-    /// <summary>
-    /// Extensiones para mapear Usuario a DTOs
-    /// </summary>
     public static class UsuarioMapper
     {
         public static UsuarioResponseDto ToResponseDto(this Usuario usuario)

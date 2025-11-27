@@ -3,9 +3,6 @@ using Magnus.Domain.Entities;
 
 namespace Magnus.Application.Mappers
 {
-    /// <summary>
-    /// Extensiones para mapear Proveedor a DTOs
-    /// </summary>
     public static class ProveedorMapper
     {
         public static ProveedorResponseDto ToResponseDto(this Proveedor proveedor)

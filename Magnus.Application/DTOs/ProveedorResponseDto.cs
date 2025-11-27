@@ -1,8 +1,5 @@
 namespace Magnus.Application.DTOs
 {
-    /// <summary>
-    /// DTO de respuesta para Proveedor
-    /// </summary>
     public class ProveedorResponseDto
     {
         public Guid Id { get; set; }

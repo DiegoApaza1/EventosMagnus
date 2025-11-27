@@ -9,9 +9,6 @@ using Magnus.Domain.Entities;
 
 namespace Magnus.Application.Features.Usuarios.Commands.RegistrarUsuario
 {
-    /// <summary>
-    /// Handler para registrar usuarios.
-    /// </summary>
     public class RegistrarUsuarioCommandHandler
     {
         private readonly IUnitOfWork _uow;
@@ -27,12 +24,10 @@ namespace Magnus.Application.Features.Usuarios.Commands.RegistrarUsuario
         {
             var dto = command.Dto;
 
-            // Validaciones básicas
             if (string.IsNullOrWhiteSpace(dto.Nombre)) throw new ArgumentException("Nombre requerido.");
             if (string.IsNullOrWhiteSpace(dto.Email)) throw new ArgumentException("Email requerido.");
             if (string.IsNullOrWhiteSpace(dto.Password)) throw new ArgumentException("Password requerido.");
 
-            // Revisa si el email ya existe
             var existing = await _uow.Usuarios.GetAllAsync();
             foreach (var u in existing)
             {
@@ -42,22 +37,16 @@ namespace Magnus.Application.Features.Usuarios.Commands.RegistrarUsuario
                 }
             }
 
-            // Hash simple de la contraseña (SHA256) — puedes reemplazar por BCrypt
             string passwordHash = ComputeSha256Hash(dto.Password);
 
-            // Crear entidad de dominio
             var usuario = new Usuario(dto.Nombre, dto.Email, passwordHash);
 
-            // Guardar
             await _uow.Usuarios.AddAsync(usuario);
             await _uow.CommitAsync();
-
-            // Notificación opcional por email
             if (_emailService != null)
             {
                 var subject = "Bienvenido a Proyecto Magnus";
                 var body = $"Hola {usuario.Nombre}, tu cuenta ha sido creada correctamente.";
-                // No esperamos/esperar en background para no bloquear
                 _ = _emailService.SendEmailAsync(usuario.Email, subject, body);
             }
 
@@ -66,7 +55,6 @@ namespace Magnus.Application.Features.Usuarios.Commands.RegistrarUsuario
 
         private static string ComputeSha256Hash(string rawData)
         {
-            // Create a SHA256
             using (var sha256 = SHA256.Create())
             {
                 var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(rawData));

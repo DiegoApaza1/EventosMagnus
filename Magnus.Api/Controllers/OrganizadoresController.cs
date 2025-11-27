@@ -38,7 +38,7 @@ namespace Magnus.Api.Controllers
             await _unitOfWork.CommitAsync();
 
             var response = ApiResponse<object>.SuccessResponse(
-                new { organizador.Id, organizador.NombreEmpresa },
+                new { organizador.Id, organizador.Nombre },
                 "Organizador creado exitosamente"
             );
 

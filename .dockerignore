@@ -1,0 +1,67 @@
+# Directorios de build
+**/bin/
+**/obj/
+**/out/
+**/publish/
+
+# Directorios de dependencias
+**/node_modules/
+**/packages/
+
+# Archivos de usuario y configuración local
+**/.vs/
+**/.vscode/
+**/.idea/
+**/*.user
+**/*.suo
+**/*.userosscache
+**/*.sln.docstates
+
+# User Secrets (nunca deben ir al contenedor)
+**/appsettings.Development.json
+**/appsettings.Example.json
+
+# Test results
+**/TestResults/
+**/*.trx
+
+# Archivos temporales
+**/.DS_Store
+**/Thumbs.db
+**/*.log
+**/*.tmp
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# GitHub Actions
+.github/
+
+# Documentación no necesaria en runtime
+**/*.md
+!README.md
+
+# Archivos de desarrollo
+**/.editorconfig
+**/.dockerignore
+**/Dockerfile
+**/docker-compose*.yml
+
+# Rider
+**/.idea/
+**/rider.project.model.nuget.info
+
+# Swagger/OpenAPI generado
+**/swagger.json
+
+# Archivos de análisis
+**/swark-output/
+**/*.swp
+**/*.bak
+
+# NuGet
+**/*.nupkg
+**/*.snupkg
+.nuget/

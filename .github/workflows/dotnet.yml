@@ -25,16 +25,16 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
         
     - name: Restore dependencies
-      run: dotnet restore EventosMagnus/EventosMagnus.sln
+      run: dotnet restore EventosMagnus.sln
       
     - name: Build application
-      run: dotnet build EventosMagnus/EventosMagnus.sln --configuration Release --no-restore
+      run: dotnet build EventosMagnus.sln --configuration Release --no-restore
       
     - name: Run Architecture Tests
-      run: dotnet test EventosMagnus/Magnus.ArchTests/Magnus.ArchTests.csproj --configuration Release --no-build --verbosity normal
+      run: dotnet test Magnus.ArchTests/Magnus.ArchTests.csproj --configuration Release --no-build --verbosity normal
       
     - name: Publish application
-      run: dotnet publish EventosMagnus/Magnus.Api/Magnus.Api.csproj --configuration Release --no-build --output ./publish
+      run: dotnet publish Magnus.Api/Magnus.Api.csproj --configuration Release --no-build --output ./publish
       
     - name: Upload artifacts
       uses: actions/upload-artifact@v4

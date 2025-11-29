@@ -3,20 +3,20 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
 # Copiar archivos de proyecto para restaurar dependencias (optimización de caché)
-COPY ["EventosMagnus/Directory.Build.props", "EventosMagnus/"]
-COPY ["EventosMagnus/Magnus.Api/Magnus.Api.csproj", "EventosMagnus/Magnus.Api/"]
-COPY ["EventosMagnus/Magnus.Application/Magnus.Application.csproj", "EventosMagnus/Magnus.Application/"]
-COPY ["EventosMagnus/Magnus.Domain/Magnus.Domain.csproj", "EventosMagnus/Magnus.Domain/"]
-COPY ["EventosMagnus/Magnus.Infrastructure/Magnus.Infrastructure.csproj", "EventosMagnus/Magnus.Infrastructure/"]
+COPY ["Directory.Build.props", "./"]
+COPY ["Magnus.Api/Magnus.Api.csproj", "Magnus.Api/"]
+COPY ["Magnus.Application/Magnus.Application.csproj", "Magnus.Application/"]
+COPY ["Magnus.Domain/Magnus.Domain.csproj", "Magnus.Domain/"]
+COPY ["Magnus.Infrastructure/Magnus.Infrastructure.csproj", "Magnus.Infrastructure/"]
 
 # Restaurar dependencias
-RUN dotnet restore "EventosMagnus/Magnus.Api/Magnus.Api.csproj"
+RUN dotnet restore "Magnus.Api/Magnus.Api.csproj"
 
 # Copiar todo el código fuente
 COPY . .
 
 # Build y publicar
-WORKDIR "/src/EventosMagnus/Magnus.Api"
+WORKDIR "/src/Magnus.Api"
 RUN dotnet build "Magnus.Api.csproj" -c Release -o /app/build
 RUN dotnet publish "Magnus.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
 

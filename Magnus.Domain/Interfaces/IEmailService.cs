@@ -1,4 +1,4 @@
-namespace Magnus.Application.Interfaces
+namespace Magnus.Domain.Interfaces
 {
     public interface IEmailService
     {

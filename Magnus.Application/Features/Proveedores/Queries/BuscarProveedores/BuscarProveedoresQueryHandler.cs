@@ -1,9 +1,10 @@
-using Magnus.Application.Interfaces;
+using Magnus.Domain.Interfaces;
 using Magnus.Domain.Entities;
+using MediatR;
 
 namespace Magnus.Application.Features.Proveedores.Queries.BuscarProveedores
 {
-    public class BuscarProveedoresQueryHandler
+    public class BuscarProveedoresQueryHandler : IRequestHandler<BuscarProveedoresQuery, IEnumerable<Proveedor>>
     {
         private readonly IUnitOfWork _uow;
 

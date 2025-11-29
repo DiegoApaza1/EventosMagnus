@@ -1,6 +1,9 @@
+using Magnus.Application.DTOs;
+using MediatR;
+
 namespace Magnus.Application.Features.Eventos.Commands.ActualizarEvento
 {
-    public class ActualizarEventoCommand
+    public class ActualizarEventoCommand : IRequest<EventoResponseDto>
     {
         public Guid EventoId { get; }
         public string Titulo { get; }

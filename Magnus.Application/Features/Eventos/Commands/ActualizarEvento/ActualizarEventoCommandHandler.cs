@@ -1,10 +1,11 @@
-using Magnus.Application.Interfaces;
+using Magnus.Domain.Interfaces;
 using Magnus.Application.DTOs;
 using Magnus.Application.Mappers;
+using MediatR;
 
 namespace Magnus.Application.Features.Eventos.Commands.ActualizarEvento
 {
-    public class ActualizarEventoCommandHandler
+    public class ActualizarEventoCommandHandler : IRequestHandler<ActualizarEventoCommand, EventoResponseDto>
     {
         private readonly IUnitOfWork _uow;
 

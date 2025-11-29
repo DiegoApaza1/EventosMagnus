@@ -1,8 +1,9 @@
-using Magnus.Application.Interfaces;
+using Magnus.Domain.Interfaces;
+using MediatR;
 
 namespace Magnus.Application.Features.Eventos.Commands.EliminarEvento
 {
-    public class EliminarEventoCommandHandler
+    public class EliminarEventoCommandHandler : IRequestHandler<EliminarEventoCommand, bool>
     {
         private readonly IUnitOfWork _uow;
 

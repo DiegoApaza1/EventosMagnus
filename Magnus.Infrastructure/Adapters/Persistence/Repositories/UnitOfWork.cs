@@ -1,8 +1,7 @@
-using Magnus.Application.Interfaces;
 using Magnus.Domain.Interfaces;
-using Magnus.Infrastructure.Persistence.DbContexts;
+using Magnus.Infrastructure.Adapters.Persistence.DbContexts;
 
-namespace Magnus.Infrastructure.Persistence.Repositories
+namespace Magnus.Infrastructure.Adapters.Persistence.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
@@ -25,8 +24,5 @@ namespace Magnus.Infrastructure.Persistence.Repositories
         public ICotizacionRepository Cotizaciones { get; }
 
         public async Task<int> CommitAsync() => await _context.SaveChangesAsync();
-        
-        // Explicit implementation of IUnitOfWork.CompleteAsync
-        async Task IUnitOfWork.CompleteAsync() => await _context.SaveChangesAsync();
     }
 }

@@ -1,8 +1,9 @@
 using Magnus.Domain.Entities;
 using Magnus.Domain.Interfaces;
-using Magnus.Infrastructure.Persistence.DbContexts;
+using Magnus.Infrastructure.Adapters.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
-namespace Magnus.Infrastructure.Persistence.Repositories
+
+namespace Magnus.Infrastructure.Adapters.Persistence.Repositories
 {
     public class EventoRepository : IEventoRepository
     {

@@ -1,8 +1,10 @@
 using Magnus.Application.DTOs;
+using Magnus.Domain.Entities;
+using MediatR;
 
 namespace Magnus.Application.Features.Proveedores.Queries.BuscarProveedores
 {
-    public class BuscarProveedoresQuery
+    public class BuscarProveedoresQuery : IRequest<IEnumerable<Proveedor>>
     {
         public ProveedorBusquedaDto Filtros { get; }
 

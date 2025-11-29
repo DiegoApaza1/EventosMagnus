@@ -1,15 +1,15 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Magnus.Application.Interfaces;
-using Magnus.Application.Features.Eventos.Commands.CrearEvento;
+using Magnus.Domain.Interfaces;
 using Magnus.Application.DTOs;
 using Magnus.Application.Mappers;
 using Magnus.Domain.Entities;
+using MediatR;
 
 namespace Magnus.Application.Features.Eventos.Commands.CrearEvento
 {
-    public class CrearEventoCommandHandler
+    public class CrearEventoCommandHandler : IRequestHandler<CrearEventoCommand, EventoResponseDto>
     {
         private readonly IUnitOfWork _uow;
         private readonly IEmailService? _emailService;

@@ -1,7 +1,4 @@
-using Magnus.Domain.Interfaces;
-using System.Threading.Tasks;
-
-namespace Magnus.Application.Interfaces
+namespace Magnus.Domain.Interfaces
 {
     public interface IUnitOfWork
     {
@@ -12,6 +9,5 @@ namespace Magnus.Application.Interfaces
         ICotizacionRepository Cotizaciones { get; }
 
         Task<int> CommitAsync();
-        Task CompleteAsync();
     }
 }

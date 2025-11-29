@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Magnus.Application.Features.Proveedores.Queries.BuscarProveedores;
 using Magnus.Application.DTOs;
-using Magnus.Application.Interfaces;
+using MediatR;
 
 namespace Magnus.Api.Controllers
 {
@@ -9,18 +9,18 @@ namespace Magnus.Api.Controllers
     [Route("api/[controller]")]
     public class ProveedoresController : ControllerBase
     {
-        private readonly BuscarProveedoresQueryHandler _handler;
+        private readonly IMediator _mediator;
 
-        public ProveedoresController(IUnitOfWork unitOfWork)
+        public ProveedoresController(IMediator mediator)
         {
-            _handler = new BuscarProveedoresQueryHandler(unitOfWork);
+            _mediator = mediator;
         }
 
         [HttpGet("buscar")]
         public async Task<IActionResult> Buscar([FromQuery] ProveedorBusquedaDto nombre)
         {
             var query = new BuscarProveedoresQuery(nombre);
-            var resultado = await _handler.Handle(query);
+            var resultado = await _mediator.Send(query);
             return Ok(resultado);
         }
     }

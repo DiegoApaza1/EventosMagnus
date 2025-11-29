@@ -1,18 +1,16 @@
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Magnus.Api.Middlewares;
-using Magnus.Application.Features.Eventos.Commands.CrearEvento;
-using Magnus.Application.Features.Proveedores.Queries.BuscarProveedores;
-using Magnus.Application.Features.Usuarios.Commands.RegistrarUsuario;
-using Magnus.Application.Features.Usuarios.Commands.RestablecerPassword;
-using Magnus.Infrastructure.Persistence.DbContexts;
+using Magnus.Infrastructure.Adapters.Persistence.DbContexts;
+using Magnus.Infrastructure.Adapters.Persistence.Repositories;
+using Magnus.Infrastructure.Adapters.Services;
 using Microsoft.EntityFrameworkCore;
-using Magnus.Application.Interfaces;
-using Magnus.Infrastructure.Persistence.Repositories;
+using Magnus.Domain.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,22 +18,13 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 builder.Services.AddDbContext<MagnusDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<Magnus.Application.Interfaces.IEmailService, Magnus.Infrastructure.Services.EmailService>();
-builder.Services.AddScoped<Magnus.Application.Interfaces.ITokenService, Magnus.Infrastructure.Services.JwtTokenService>();
-// Register MediatR with the application assembly
 builder.Services.AddMediatR(cfg => 
-    cfg.RegisterServicesFromAssembly(typeof(Magnus.Application.Features.Usuarios.Commands.RestablecerPassword.RestablecerPasswordCommand).Assembly)
-);
-builder.Services.AddScoped<RegistrarUsuarioCommandHandler>();
+    cfg.RegisterServicesFromAssembly(Assembly.Load("Magnus.Application")));
 
-builder.Services.AddScoped<CrearEventoCommandHandler>();
-builder.Services.AddScoped<Magnus.Application.Features.Eventos.Commands.ActualizarEvento.ActualizarEventoCommandHandler>();
-builder.Services.AddScoped<Magnus.Application.Features.Eventos.Commands.EliminarEvento.EliminarEventoCommandHandler>();
-builder.Services.AddScoped<Magnus.Application.Features.Eventos.Queries.ObtenerEventoPorId.ObtenerEventoPorIdQueryHandler>();
-builder.Services.AddScoped<Magnus.Application.Features.Eventos.Queries.ListarEventosPorOrganizador.ListarEventosPorOrganizadorQueryHandler>();
-
-builder.Services.AddScoped<BuscarProveedoresQueryHandler>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ITokenService, JwtTokenService>();
+builder.Services.AddScoped<IReportService, ExcelReportService>();
 
 builder.Services.AddHangfire(config => config.UseMemoryStorage());
 builder.Services.AddHangfireServer();

@@ -28,23 +28,25 @@ namespace Magnus.ArchTests
         [Fact]
         public void Application_Depends_Only_On_Domain()
         {
-            var result = Types.InAssembly(typeof(Magnus.Application.Interfaces.IUnitOfWork).Assembly)
+            var result = Types.InAssembly(typeof(Magnus.Domain.Interfaces.IUnitOfWork).Assembly)
                 .Should()
                 .NotHaveDependencyOnAny(InfrastructureNs, ApiNs)
                 .GetResult();
 
-            Assert.True(result.IsSuccessful, string.Join(Environment.NewLine, result.FailingTypes));
+            var failing = result.FailingTypes?.Select(t => t.FullName) ?? Array.Empty<string>();
+            Assert.True(result.IsSuccessful, string.Join(Environment.NewLine, failing));
         }
 
         [Fact]
         public void Infrastructure_Does_Not_Depend_On_Api()
         {
-            var result = Types.InAssembly(typeof(Magnus.Infrastructure.Persistence.Repositories.UnitOfWork).Assembly)
+            var result = Types.InAssembly(typeof(Magnus.Infrastructure.Adapters.Persistence.Repositories.UnitOfWork).Assembly)
                 .Should()
                 .NotHaveDependencyOn(ApiNs)
                 .GetResult();
 
-            Assert.True(result.IsSuccessful, string.Join(Environment.NewLine, result.FailingTypes));
+            var failing = result.FailingTypes?.Select(t => t.FullName) ?? Array.Empty<string>();
+            Assert.True(result.IsSuccessful, string.Join(Environment.NewLine, failing));
         }
 
         [Fact]
@@ -57,7 +59,8 @@ namespace Magnus.ArchTests
                 .NotHaveDependencyOn(InfrastructureNs)
                 .GetResult();
 
-            Assert.True(result.IsSuccessful, string.Join(Environment.NewLine, result.FailingTypes));
+            var failing = result.FailingTypes?.Select(t => t.FullName) ?? Array.Empty<string>();
+            Assert.True(result.IsSuccessful, string.Join(Environment.NewLine, failing));
         }
 
         [Fact]
@@ -75,15 +78,15 @@ namespace Magnus.ArchTests
         [Fact]
         public void UnitOfWork_Is_Implemented_In_Infrastructure()
         {
-            // Convention: IUnitOfWork is implemented in Infrastructure
-            var result = Types.InAssembly(typeof(Magnus.Infrastructure.Persistence.Repositories.UnitOfWork).Assembly)
+            var result = Types.InAssembly(typeof(Magnus.Infrastructure.Adapters.Persistence.Repositories.UnitOfWork).Assembly)
                 .That()
-                .ImplementInterface(typeof(Magnus.Application.Interfaces.IUnitOfWork))
+                .ImplementInterface(typeof(Magnus.Domain.Interfaces.IUnitOfWork))
                 .Should()
                 .ResideInNamespace(InfrastructureNs)
                 .GetResult();
 
-            Assert.True(result.IsSuccessful, string.Join(Environment.NewLine, result.FailingTypes));
+            var failing = result.FailingTypes?.Select(t => t.FullName) ?? Array.Empty<string>();
+            Assert.True(result.IsSuccessful, string.Join(Environment.NewLine, failing));
         }
     }
 }

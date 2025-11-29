@@ -1,10 +1,11 @@
-using Magnus.Application.Interfaces;
+using Magnus.Domain.Interfaces;
 using Magnus.Application.DTOs;
 using Magnus.Application.Mappers;
+using MediatR;
 
 namespace Magnus.Application.Features.Eventos.Queries.ListarEventosPorOrganizador
 {
-    public class ListarEventosPorOrganizadorQueryHandler
+    public class ListarEventosPorOrganizadorQueryHandler : IRequestHandler<ListarEventosPorOrganizadorQuery, IEnumerable<EventoResponseDto>>
     {
         private readonly IUnitOfWork _uow;
 

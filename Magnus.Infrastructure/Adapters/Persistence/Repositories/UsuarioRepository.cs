@@ -1,10 +1,9 @@
 using Magnus.Domain.Entities;
 using Magnus.Domain.Interfaces;
-using Magnus.Infrastructure.Persistence.DbContexts;
+using Magnus.Infrastructure.Adapters.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
-using Magnus.Application.Interfaces;
 
-namespace Magnus.Infrastructure.Persistence.Repositories
+namespace Magnus.Infrastructure.Adapters.Persistence.Repositories
 {
     public class UsuarioRepository : IUsuarioRepository
     {

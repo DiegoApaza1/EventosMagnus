@@ -17,16 +17,14 @@
 [Ll]ogs/
 
 # User Secrets (IMPORTANTE - NO subir credenciales)
-# Ya están configurados automáticamente fuera del proyecto pero por si acaso:
 secrets.json
 **/appsettings.Development.json
 **/appsettings.Local.json
 
-# EF Core Migrations - COMENTADO para que SÍ se suban al repo
-# Si quieres que cada dev regenere las migraciones, descomenta estas líneas:
-# **/Migrations/
-# **/Migrations/**/*.cs
-# **/Migrations/**/*.Designer.cs
+# EF Core Migrations 
+**/Migrations/
+**/Migrations/**/*.cs
+**/Migrations/**/*.Designer.cs
 
 # NuGet
 *.nupkg
@@ -37,9 +35,9 @@ secrets.json
 project.lock.json
 project.fragment.lock.json
 artifacts/
+packages/
 
-# Archivos sensibles - NO subir al repositorio
-**/appsettings.json
+# Archivos sensibles - NO subir credenciales reales
 **/appsettings.Production.json
 *.pfx
 *.p12
@@ -54,15 +52,13 @@ artifacts/
 *.bak
 *.orig
 
+# Documentación local
+*.md
+
 # Rider settings
 *.sln.iml
 
-# macOS
+# OS files
 .DS_Store
-
-# Windows
 Thumbs.db
 Desktop.ini
-
-# Archivos de documentación temporal
-RESPONSE_FORMAT.md

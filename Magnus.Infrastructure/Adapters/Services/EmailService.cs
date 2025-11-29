@@ -1,9 +1,9 @@
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using Magnus.Application.Interfaces;
+using Magnus.Domain.Interfaces;
 
-namespace Magnus.Infrastructure.Services
+namespace Magnus.Infrastructure.Adapters.Services
 {
     public class EmailService : IEmailService
     {

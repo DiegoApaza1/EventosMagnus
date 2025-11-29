@@ -1,7 +1,7 @@
 using Magnus.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Magnus.Infrastructure.Persistence.DbContexts
+namespace Magnus.Infrastructure.Adapters.Persistence.DbContexts
 {
     public class MagnusDbContext : DbContext
     {
@@ -18,6 +18,7 @@ namespace Magnus.Infrastructure.Persistence.DbContexts
         {
             base.OnModelCreating(modelBuilder);
 
+            // Configuración adicional (ejemplo: relaciones y restricciones)
             modelBuilder.Entity<Evento>()
                 .HasOne(e => e.Organizador)
                 .WithMany()

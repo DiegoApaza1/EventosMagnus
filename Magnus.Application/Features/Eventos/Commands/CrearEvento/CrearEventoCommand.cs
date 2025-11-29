@@ -1,8 +1,9 @@
 using Magnus.Application.DTOs;
+using MediatR;
 
 namespace Magnus.Application.Features.Eventos.Commands.CrearEvento
 {
-    public class CrearEventoCommand
+    public class CrearEventoCommand : IRequest<EventoResponseDto>
     {
         public EventoCreacionDto Dto { get; }
 

@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Magnus.Application.Interfaces;
 using Magnus.Application.DTOs;
 using Magnus.Application.Features.Eventos.Commands.CrearEvento;
 using Magnus.Application.Features.Eventos.Commands.ActualizarEvento;
@@ -7,6 +6,7 @@ using Magnus.Application.Features.Eventos.Commands.EliminarEvento;
 using Magnus.Application.Features.Eventos.Queries.ObtenerEventoPorId;
 using Magnus.Application.Features.Eventos.Queries.ListarEventosPorOrganizador;
 using Microsoft.AspNetCore.Authorization;
+using MediatR;
 
 namespace Magnus.Api.Controllers
 {
@@ -15,13 +15,11 @@ namespace Magnus.Api.Controllers
     [Authorize]
     public class EventosController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IEmailService _emailService;
+        private readonly IMediator _mediator;
 
-        public EventosController(IUnitOfWork unitOfWork, IEmailService emailService)
+        public EventosController(IMediator mediator)
         {
-            _unitOfWork = unitOfWork;
-            _emailService = emailService;
+            _mediator = mediator;
         }
 
         [HttpPost]
@@ -29,9 +27,8 @@ namespace Magnus.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<EventoResponseDto>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CrearEvento([FromBody] EventoCreacionDto dto)
         {
-            var handler = new CrearEventoCommandHandler(_unitOfWork, _emailService);
             var command = new CrearEventoCommand(dto);
-            var result = await handler.Handle(command);
+            var result = await _mediator.Send(command);
             
             var response = ApiResponse<EventoResponseDto>.SuccessResponse(
                 result, 
@@ -47,9 +44,8 @@ namespace Magnus.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<EventoResponseDto>), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ObtenerEventoPorId(Guid id)
         {
-            var handler = new ObtenerEventoPorIdQueryHandler(_unitOfWork);
             var query = new ObtenerEventoPorIdQuery(id);
-            var result = await handler.Handle(query);
+            var result = await _mediator.Send(query);
 
             if (result == null)
             {
@@ -68,9 +64,8 @@ namespace Magnus.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<IEnumerable<EventoResponseDto>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> ListarEventosPorOrganizador(Guid organizadorId)
         {
-            var handler = new ListarEventosPorOrganizadorQueryHandler(_unitOfWork);
             var query = new ListarEventosPorOrganizadorQuery(organizadorId);
-            var result = await handler.Handle(query);
+            var result = await _mediator.Send(query);
             
             var response = ApiResponse<IEnumerable<EventoResponseDto>>.SuccessResponse(
                 result,
@@ -86,7 +81,6 @@ namespace Magnus.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<EventoResponseDto>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ActualizarEvento(Guid id, [FromBody] EventoActualizacionDto dto)
         {
-            var handler = new ActualizarEventoCommandHandler(_unitOfWork);
             var command = new ActualizarEventoCommand(
                 id, 
                 dto.Titulo, 
@@ -97,7 +91,7 @@ namespace Magnus.Api.Controllers
                 dto.Descripcion
             );
 
-            var result = await handler.Handle(command);
+            var result = await _mediator.Send(command);
             
             var response = ApiResponse<EventoResponseDto>.SuccessResponse(
                 result,
@@ -112,9 +106,8 @@ namespace Magnus.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> EliminarEvento(Guid id)
         {
-            var handler = new EliminarEventoCommandHandler(_unitOfWork);
             var command = new EliminarEventoCommand(id);
-            await handler.Handle(command);
+            await _mediator.Send(command);
             
             var response = ApiResponse<object>.SuccessResponse(
                 new { eventoId = id },

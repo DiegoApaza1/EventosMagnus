@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Magnus.Application.Interfaces;
 using Magnus.Application.DTOs;
@@ -6,6 +7,10 @@ using Magnus.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Cryptography;
 using System.Text;
+using MediatR;
+using Magnus.Application.Features.Usuarios.Commands.SolicitarRestablecimientoPassword;
+using Magnus.Application.Features.Usuarios.Commands.RestablecerPassword;
+using Microsoft.AspNetCore.Http;
 
 namespace Magnus.Api.Controllers
 {
@@ -15,11 +20,13 @@ namespace Magnus.Api.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITokenService _tokenService;
+        private readonly IMediator _mediator;
 
-        public AuthController(IUnitOfWork unitOfWork, ITokenService tokenService)
+        public AuthController(IUnitOfWork unitOfWork, ITokenService tokenService, IMediator mediator)
         {
             _unitOfWork = unitOfWork;
             _tokenService = tokenService;
+            _mediator = mediator;
         }
 
         [AllowAnonymous]
@@ -59,7 +66,7 @@ namespace Magnus.Api.Controllers
                 return Unauthorized(ApiResponse<LoginResponseDto>.ErrorResponse("Credenciales inválidas"));
             }
 
-            var token = _tokenService.GenerateToken(user.Id, user.Nombre, user.Email);
+            var token = _tokenService.CreateToken(user);
 
             var response = new LoginResponseDto
             {
@@ -69,6 +76,34 @@ namespace Magnus.Api.Controllers
             };
 
             return Ok(ApiResponse<LoginResponseDto>.SuccessResponse(response, "Login exitoso"));
+        }
+
+        [HttpPost("solicitar-restablecimiento")]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> SolicitarRestablecimiento([FromBody] string email)
+        {
+            var command = new SolicitarRestablecimientoPasswordCommand { Email = email };
+            var result = await _mediator.Send(command);
+            
+            // Siempre devolver 200 aunque el correo no exista por seguridad
+            return Ok(ApiResponse<object>.SuccessResponse(null, "Si el correo existe, se ha enviado un enlace para restablecer la contraseña"));
+        }
+
+        [HttpPost("restablecer-password")]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> RestablecerPassword([FromBody] Application.DTOs.RestablecerPasswordRequestDto dto)
+        {
+            var command = new RestablecerPasswordCommand(dto);
+            var result = await _mediator.Send<bool>(command);
+            
+            if (!result)
+                return BadRequest(ApiResponse<object>.ErrorResponse("No se pudo restablecer la contraseña. El token puede ser inválido o haber expirado."));
+            
+            return Ok(ApiResponse<object>.SuccessResponse(null, "Contraseña restablecida exitosamente"));
         }
 
         private static string ComputeSha256Hash(string rawData)
@@ -83,8 +118,28 @@ namespace Magnus.Api.Controllers
 
     public class RegistroDto
     {
+        [Required(ErrorMessage = "El nombre es requerido")]
+        [StringLength(100, ErrorMessage = "El nombre no puede tener más de 100 caracteres")]
         public string Nombre { get; set; } = null!;
+
+        [Required(ErrorMessage = "El email es requerido")]
+        [EmailAddress(ErrorMessage = "El formato del email no es válido")]
         public string Email { get; set; } = null!;
+
+        [Required(ErrorMessage = "La contraseña es requerida")]
+        [MinLength(8, ErrorMessage = "La contraseña debe tener al menos 8 caracteres")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$", 
+            ErrorMessage = "La contraseña debe contener al menos una mayúscula, una minúscula y un número")]
+        public string Password { get; set; } = null!;
+    }
+
+    public class LoginRequestDto
+    {
+        [Required(ErrorMessage = "El email es requerido")]
+        [EmailAddress(ErrorMessage = "El formato del email no es válido")]
+        public string Email { get; set; } = null!;
+
+        [Required(ErrorMessage = "La contraseña es requerida")]
         public string Password { get; set; } = null!;
     }
 }

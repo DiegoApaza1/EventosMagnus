@@ -12,5 +12,6 @@ namespace Magnus.Application.Interfaces
         ICotizacionRepository Cotizaciones { get; }
 
         Task<int> CommitAsync();
+        Task CompleteAsync();
     }
 }

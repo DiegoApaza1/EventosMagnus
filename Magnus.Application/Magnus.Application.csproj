@@ -10,4 +10,8 @@
       <ProjectReference Include="..\Magnus.Domain\Magnus.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="MediatR" Version="12.1.1" />
+    </ItemGroup>
+
 </Project>

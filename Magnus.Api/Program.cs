@@ -4,6 +4,7 @@ using Magnus.Api.Middlewares;
 using Magnus.Application.Features.Eventos.Commands.CrearEvento;
 using Magnus.Application.Features.Proveedores.Queries.BuscarProveedores;
 using Magnus.Application.Features.Usuarios.Commands.RegistrarUsuario;
+using Magnus.Application.Features.Usuarios.Commands.RestablecerPassword;
 using Magnus.Infrastructure.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Magnus.Application.Interfaces;
@@ -22,7 +23,10 @@ builder.Services.AddDbContext<MagnusDbContext>(options =>
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<Magnus.Application.Interfaces.IEmailService, Magnus.Infrastructure.Services.EmailService>();
 builder.Services.AddScoped<Magnus.Application.Interfaces.ITokenService, Magnus.Infrastructure.Services.JwtTokenService>();
-
+// Register MediatR with the application assembly
+builder.Services.AddMediatR(cfg => 
+    cfg.RegisterServicesFromAssembly(typeof(Magnus.Application.Features.Usuarios.Commands.RestablecerPassword.RestablecerPasswordCommand).Assembly)
+);
 builder.Services.AddScoped<RegistrarUsuarioCommandHandler>();
 
 builder.Services.AddScoped<CrearEventoCommandHandler>();
@@ -40,6 +44,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAntiforgery();
 builder.Services.AddSwaggerGen(c =>
+
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {

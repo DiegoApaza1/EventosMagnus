@@ -25,5 +25,8 @@ namespace Magnus.Infrastructure.Persistence.Repositories
         public ICotizacionRepository Cotizaciones { get; }
 
         public async Task<int> CommitAsync() => await _context.SaveChangesAsync();
+        
+        // Explicit implementation of IUnitOfWork.CompleteAsync
+        async Task IUnitOfWork.CompleteAsync() => await _context.SaveChangesAsync();
     }
 }

@@ -1,7 +1,14 @@
+using Magnus.Domain.Entities;
+using System.Threading.Tasks;
+
 namespace Magnus.Application.Interfaces
 {
     public interface ITokenService
     {
-        string GenerateToken(Guid userId, string nombre, string email, IEnumerable<KeyValuePair<string,string>>? extraClaims = null, DateTime? nowUtc = null);
+        // Método existente
+        string CreateToken(Usuario user); 
+        
+        // NUEVO: Genera un token aleatorio, seguro y de un solo uso para el restablecimiento.
+        string GeneratePasswordResetToken(); 
     }
 }

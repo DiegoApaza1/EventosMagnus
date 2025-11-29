@@ -3,13 +3,14 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Magnus.Application.Interfaces;
+using Magnus.Domain.Interfaces;
 using Magnus.Application.Features.Usuarios.Commands.RegistrarUsuario;
 using Magnus.Domain.Entities;
+using MediatR;
 
 namespace Magnus.Application.Features.Usuarios.Commands.RegistrarUsuario
 {
-    public class RegistrarUsuarioCommandHandler
+    public class RegistrarUsuarioCommandHandler : IRequestHandler<RegistrarUsuarioCommand, Usuario>
     {
         private readonly IUnitOfWork _uow;
         private readonly IEmailService? _emailService;
@@ -20,7 +21,7 @@ namespace Magnus.Application.Features.Usuarios.Commands.RegistrarUsuario
             _emailService = emailService;
         }
 
-        public async Task<Usuario> Handle(RegistrarUsuarioCommand command, CancellationToken ct = default)
+        public async Task<Usuario> Handle(RegistrarUsuarioCommand command, CancellationToken ct)
         {
             var dto = command.Dto;
 

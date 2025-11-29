@@ -32,7 +32,13 @@ namespace Magnus.Api.Controllers
             var command = new RegistrarUsuarioCommand(registroDto);
             var usuario = await _mediator.Send(command);
 
-            var usuarioDto = usuario.ToResponseDto();
+            var usuarioDto = new UsuarioResponseDto
+            {
+                Id = usuario.Id,
+                Nombre = usuario.Nombre,
+                Email = usuario.Email,
+                CreatedAt = usuario.CreatedAt
+            };
             var response = ApiResponse<UsuarioResponseDto>.SuccessResponse(
                 usuarioDto,
                 "Usuario creado exitosamente. Usa este ID como organizadorId para crear eventos."
@@ -67,7 +73,7 @@ namespace Magnus.Api.Controllers
             var command = new SolicitarRestablecimientoPasswordCommand { Email = email };
             var result = await _mediator.Send(command);
             
-            return Ok(ApiResponse<object>.SuccessResponse(null, "Si el correo existe, se ha enviado un enlace para restablecer la contraseña"));
+            return Ok(ApiResponse<object>.SuccessResponse(new { }, "Si el correo existe, se ha enviado un enlace para restablecer la contraseña"));
         }
 
         [HttpPost("restablecer-password")]
@@ -82,7 +88,7 @@ namespace Magnus.Api.Controllers
             if (!result)
                 return BadRequest(ApiResponse<object>.ErrorResponse("No se pudo restablecer la contraseña. El token puede ser inválido o haber expirado."));
             
-            return Ok(ApiResponse<object>.SuccessResponse(null, "Contraseña restablecida exitosamente"));
+            return Ok(ApiResponse<object>.SuccessResponse(new { }, "Contraseña restablecida exitosamente"));
         }
     }
 

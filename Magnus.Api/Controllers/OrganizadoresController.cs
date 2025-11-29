@@ -1,7 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Magnus.Application.DTOs;
 using Magnus.Domain.Entities;
-using Magnus.Application.Interfaces;
+using Magnus.Domain.Interfaces;
+using MediatR;
+using Magnus.Application.Features.Organizadores.Commands.CrearOrganizador;
+using Magnus.Application.Features.Organizadores.Queries.ObtenerOrganizadorPorId;
+using Magnus.Application.Features.Organizadores.Queries.ListarOrganizadores;
 
 namespace Magnus.Api.Controllers
 {
@@ -9,32 +13,23 @@ namespace Magnus.Api.Controllers
     [Route("api/[controller]")]
     public class OrganizadoresController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMediator _mediator;
 
-        public OrganizadoresController(IUnitOfWork unitOfWork)
+        public OrganizadoresController(IMediator mediator)
         {
-            _unitOfWork = unitOfWork;
+            _mediator = mediator;
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ApiResponse<OrganizadorResponseDto>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CrearOrganizador([FromBody] OrganizadorDto dto)
+        public async Task<IActionResult> CrearOrganizador([FromBody] OrganizadorCreacionDto dto)
         {
-            var usuario = await _unitOfWork.Usuarios.GetByIdAsync(dto.UsuarioId);
-            if (usuario == null)
-            {
-                var error = ApiResponse<object>.ErrorResponse("Usuario no encontrado");
-                return BadRequest(error);
-            }
+            var command = new CrearOrganizadorCommand(dto.Nombre, dto.Telefono, dto.UsuarioId);
+            var organizador = await _mediator.Send(command);
 
-            var organizador = new Organizador(dto.NombreEmpresa, dto.Telefono, dto.UsuarioId);
-
-            await _unitOfWork.Organizadores.AddAsync(organizador);
-            await _unitOfWork.CommitAsync();
-
-            var response = ApiResponse<object>.SuccessResponse(
-                new { organizador.Id, organizador.Nombre },
+            var response = ApiResponse<OrganizadorResponseDto>.SuccessResponse(
+                organizador,
                 "Organizador creado exitosamente"
             );
 
@@ -42,11 +37,12 @@ namespace Magnus.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(ApiResponse<Organizador>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<OrganizadorResponseDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ObtenerOrganizadorPorId(Guid id)
         {
-            var organizador = await _unitOfWork.Organizadores.GetByIdAsync(id);
+            var query = new ObtenerOrganizadorPorIdQuery(id);
+            var organizador = await _mediator.Send(query);
 
             if (organizador == null)
             {
@@ -54,24 +50,20 @@ namespace Magnus.Api.Controllers
                 return NotFound(error);
             }
 
-            var response = ApiResponse<Organizador>.SuccessResponse(organizador);
+            var response = ApiResponse<OrganizadorResponseDto>.SuccessResponse(organizador);
             return Ok(response);
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(ApiResponse<IEnumerable<Organizador>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<IEnumerable<OrganizadorResponseDto>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> ListarOrganizadores()
         {
-            var organizadores = await _unitOfWork.Organizadores.GetAllAsync();
-            var response = ApiResponse<IEnumerable<Organizador>>.SuccessResponse(organizadores);
+            var query = new ListarOrganizadoresQuery();
+            var organizadores = await _mediator.Send(query);
+
+            var response = ApiResponse<IEnumerable<OrganizadorResponseDto>>.SuccessResponse(organizadores);
             return Ok(response);
         }
     }
 
-    public class OrganizadorDto
-    {
-        public string NombreEmpresa { get; set; } = null!;
-        public string Telefono { get; set; } = null!;
-        public Guid UsuarioId { get; set; }
-    }
 }

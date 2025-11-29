@@ -57,5 +57,10 @@ namespace Magnus.Infrastructure.Adapters.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        public string GeneratePasswordResetToken()
+        {
+            return Guid.NewGuid().ToString("N");
+        }
     }
 }

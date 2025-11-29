@@ -4,10 +4,10 @@ global using MediatR;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Security.Cryptography; // Necesario para el Hash
+using System.Security.Cryptography;
 using System.Text;
 using Magnus.Application.DTOs;
-using Magnus.Application.Interfaces;
+using Magnus.Domain.Interfaces;
 using Magnus.Domain.Entities;
 using Magnus.Domain.Exceptions;
 
@@ -62,8 +62,8 @@ namespace Magnus.Application.Features.Usuarios.Commands.RestablecerPassword
             // 3. Limpiar el token
             user.ClearPasswordResetToken();
 
-            _unitOfWork.Usuarios.Update(user); // Actualiza y marca como modificado si usas un repositorio
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.Usuarios.Update(user);
+            await _unitOfWork.CommitAsync();
 
             return true;
         }

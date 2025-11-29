@@ -4,7 +4,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Magnus.Application.DTOs;
-using Magnus.Application.Interfaces;
+using Magnus.Domain.Interfaces;
 using Magnus.Domain.Entities;
 using Magnus.Domain.Exceptions;
 
@@ -13,7 +13,7 @@ namespace Magnus.Application.Features.Usuarios.Commands.SolicitarRestablecimient
     // Comando (Input)
     public class SolicitarRestablecimientoPasswordCommand : IRequest<bool>
     {
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
     }
 
     // Handler (Lógica de Negocio)

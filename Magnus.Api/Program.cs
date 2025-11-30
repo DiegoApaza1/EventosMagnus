@@ -15,8 +15,20 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+if (connectionString?.StartsWith("postgresql://") == true)
+{
+    var uri = new Uri(connectionString);
+    connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={uri.UserInfo.Split(':')[0]};Password={uri.UserInfo.Split(':')[1]};SSL Mode=Require;Trust Server Certificate=true";
+}
+
+Console.WriteLine($"[DEBUG] Environment: {builder.Environment.EnvironmentName}");
+Console.WriteLine($"[DEBUG] Using connection to: {connectionString?.Split(';')[0]}");
+
 builder.Services.AddDbContext<MagnusDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(connectionString));
 
 builder.Services.AddMediatR(cfg => 
     cfg.RegisterServicesFromAssembly(Assembly.Load("Magnus.Application")));

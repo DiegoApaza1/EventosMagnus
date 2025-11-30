@@ -86,24 +86,15 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-// Configurar Swagger (disponible también en producción para documentación)
+// Swagger habilitado en todos los entornos (incluido Production)
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "EventosMagnus API V1");
-    if (app.Environment.IsDevelopment())
-    {
-        c.RoutePrefix = string.Empty; // Swagger en la raíz solo en desarrollo
-    }
+    c.RoutePrefix = string.Empty; // Swagger en la raíz
 });
 
 app.UseGlobalExceptionHandling();
-
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.UseSwaggerUI();
-}
 app.UseHangfireDashboard("/hangfire");
 app.UseRouting();
 app.UseAuthentication();
@@ -112,7 +103,10 @@ app.UseHttpsRedirection();
 
 app.MapControllers();
 
-// Health check endpoint para Render
+//ruta raiz
+app.MapGet("/", () => Results.Redirect("/swagger"))
+.ExcludeFromDescription();
+
 app.MapGet("/health", () => Results.Ok(new 
 { 
     status = "healthy", 

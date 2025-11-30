@@ -100,7 +100,12 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-// Swagger habilitado en todos los entornos (incluido Production)
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<MagnusDbContext>();
+    dbContext.Database.Migrate();
+}
+
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {

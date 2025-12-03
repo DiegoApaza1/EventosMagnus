@@ -25,7 +25,15 @@ namespace Magnus.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CrearOrganizador([FromBody] OrganizadorCreacionDto dto)
         {
-            var command = new CrearOrganizadorCommand(dto.Nombre, dto.Telefono, dto.UsuarioId);
+            var command = new CrearOrganizadorCommand(
+                dto.NombreEmpresa,
+                dto.Telefono,
+                dto.PrecioPorEvento,
+                dto.AñosExperiencia,
+                dto.UsuarioId,
+                dto.Descripcion,
+                dto.Direccion,
+                dto.Especialidad);
             var organizador = await _mediator.Send(command);
 
             var response = ApiResponse<OrganizadorResponseDto>.SuccessResponse(

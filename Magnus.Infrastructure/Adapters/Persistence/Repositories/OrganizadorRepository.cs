@@ -22,7 +22,7 @@ namespace Magnus.Infrastructure.Adapters.Persistence.Repositories
 
         public async Task<IEnumerable<Organizador>> SearchByNameAsync(string nombre)
             => await _context.Organizadores
-                .Where(o => o.Nombre.Contains(nombre))
+                .Where(o => o.NombreEmpresa.Contains(nombre))
                 .ToListAsync();
 
         public async Task AddAsync(Organizador organizador)

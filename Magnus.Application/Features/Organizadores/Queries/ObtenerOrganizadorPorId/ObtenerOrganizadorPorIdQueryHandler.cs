@@ -23,8 +23,15 @@ namespace Magnus.Application.Features.Organizadores.Queries.ObtenerOrganizadorPo
             return new OrganizadorResponseDto
             {
                 Id = organizador.Id,
-                Nombre = organizador.Nombre,
+                NombreEmpresa = organizador.NombreEmpresa,
+                Descripcion = organizador.Descripcion,
                 Telefono = organizador.Telefono,
+                Direccion = organizador.Direccion,
+                PrecioPorEvento = organizador.PrecioPorEvento,
+                AñosExperiencia = organizador.AñosExperiencia,
+                Especialidad = organizador.Especialidad,
+                Verificado = organizador.Verificado,
+                Rating = organizador.Rating,
                 UsuarioId = organizador.UsuarioId
             };
         }

@@ -1,4 +1,5 @@
 using Magnus.Domain.Exceptions;
+using Magnus.Domain.Enums;
 using System;
 
 namespace Magnus.Domain.Entities
@@ -9,6 +10,7 @@ namespace Magnus.Domain.Entities
         public string Nombre { get; private set; } = null!;
         public string Email { get; private set; } = null!;
         public string PasswordHash { get; private set; } = null!;
+        public Rol Rol { get; private set; }
         public DateTime CreatedAt { get; private set; }
 
         // PROPIEDADES AGREGADAS PARA EL RESTABLECIMIENTO
@@ -17,14 +19,20 @@ namespace Magnus.Domain.Entities
         
         private Usuario() { }
 
-        public Usuario(string nombre, string email, string passwordHash)
+        public Usuario(string nombre, string email, string passwordHash, Rol rol = Rol.Cliente)
         {
             Id = Guid.NewGuid();
             Nombre = nombre;
             Email = email;
             PasswordHash = passwordHash;
+            Rol = rol;
             CreatedAt = DateTime.UtcNow;
             Validate();
+        }
+
+        public void CambiarRol(Rol nuevoRol)
+        {
+            Rol = nuevoRol;
         }
 
         private void Validate()

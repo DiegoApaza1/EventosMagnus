@@ -20,8 +20,15 @@ namespace Magnus.Application.Features.Organizadores.Queries.ListarOrganizadores
             return organizadores.Select(o => new OrganizadorResponseDto
             {
                 Id = o.Id,
-                Nombre = o.Nombre,
+                NombreEmpresa = o.NombreEmpresa,
+                Descripcion = o.Descripcion,
                 Telefono = o.Telefono,
+                Direccion = o.Direccion,
+                PrecioPorEvento = o.PrecioPorEvento,
+                AñosExperiencia = o.AñosExperiencia,
+                Especialidad = o.Especialidad,
+                Verificado = o.Verificado,
+                Rating = o.Rating,
                 UsuarioId = o.UsuarioId
             });
         }

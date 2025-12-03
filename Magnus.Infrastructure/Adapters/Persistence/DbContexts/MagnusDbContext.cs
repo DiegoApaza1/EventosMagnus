@@ -9,8 +9,8 @@ namespace Magnus.Infrastructure.Adapters.Persistence.DbContexts
 
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Organizador> Organizadores { get; set; }
-
         public DbSet<Evento> Eventos { get; set; }
+        public DbSet<EventoInvitado> EventoInvitados { get; set; }
         public DbSet<Proveedor> Proveedores { get; set; }
         public DbSet<Cotizacion> Cotizaciones { get; set; }
 
@@ -30,6 +30,22 @@ namespace Magnus.Infrastructure.Adapters.Persistence.DbContexts
                 .WithMany()
                 .HasForeignKey(c => c.EventoId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<EventoInvitado>()
+                .HasOne(ei => ei.Evento)
+                .WithMany()
+                .HasForeignKey(ei => ei.EventoId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<EventoInvitado>()
+                .HasOne(ei => ei.Usuario)
+                .WithMany()
+                .HasForeignKey(ei => ei.UsuarioId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<EventoInvitado>()
+                .HasIndex(ei => new { ei.EventoId, ei.UsuarioId })
+                .IsUnique();
         }
     }
 }

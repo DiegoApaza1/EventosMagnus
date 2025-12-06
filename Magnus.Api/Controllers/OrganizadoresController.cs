@@ -7,6 +7,7 @@ using Magnus.Application.Features.Organizadores.Commands.CrearOrganizador;
 using Magnus.Application.Features.Organizadores.Queries.ObtenerOrganizadorPorId;
 using Magnus.Application.Features.Organizadores.Queries.ObtenerOrganizadorPorUsuarioId;
 using Magnus.Application.Features.Organizadores.Queries.ListarOrganizadores;
+using Magnus.Application.Features.Organizadores.Queries.ObtenerEstadisticasOrganizador;
 
 namespace Magnus.Api.Controllers
 {
@@ -90,6 +91,26 @@ namespace Magnus.Api.Controllers
 
             var response = ApiResponse<OrganizadorResponseDto>.SuccessResponse(organizador);
             return Ok(response);
+        }
+
+        [HttpGet("{id}/estadisticas")]
+        [ProducesResponseType(typeof(ApiResponse<OrganizadorStatsDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> ObtenerEstadisticasOrganizador(Guid id)
+        {
+            try
+            {
+                var query = new ObtenerEstadisticasOrganizadorQuery(id);
+                var stats = await _mediator.Send(query);
+
+                var response = ApiResponse<OrganizadorStatsDto>.SuccessResponse(stats);
+                return Ok(response);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                var error = ApiResponse<object>.ErrorResponse(ex.Message);
+                return NotFound(error);
+            }
         }
     }
 

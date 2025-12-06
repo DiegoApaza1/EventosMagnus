@@ -28,13 +28,13 @@ namespace Magnus.Api.Controllers
         {
             var command = new CrearOrganizadorCommand(
                 dto.NombreEmpresa,
+                dto.Descripcion,
                 dto.Telefono,
+                dto.Direccion,
                 dto.PrecioPorEvento,
                 dto.AñosExperiencia,
-                dto.UsuarioId,
-                dto.Descripcion,
-                dto.Direccion,
-                dto.Especialidad);
+                dto.Especialidad,
+                dto.UsuarioId);
             var organizador = await _mediator.Send(command);
 
             var response = ApiResponse<OrganizadorResponseDto>.SuccessResponse(

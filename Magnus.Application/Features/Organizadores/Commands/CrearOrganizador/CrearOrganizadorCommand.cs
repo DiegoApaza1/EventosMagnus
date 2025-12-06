@@ -5,12 +5,12 @@ namespace Magnus.Application.Features.Organizadores.Commands.CrearOrganizador
 {
     public record CrearOrganizadorCommand(
         string NombreEmpresa,
+        string Descripcion,
         string Telefono,
+        string Direccion,
         decimal PrecioPorEvento,
         int AñosExperiencia,
-        Guid UsuarioId,
-        string? Descripcion = null,
-        string? Direccion = null,
-        string? Especialidad = null) 
+        string Especialidad,
+        Guid UsuarioId) 
         : IRequest<OrganizadorResponseDto>;
 }

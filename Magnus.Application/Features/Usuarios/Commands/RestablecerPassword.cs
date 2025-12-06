@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.Text;
 using Magnus.Application.DTOs;
-using Magnus.Domain.Interfaces;
+using Magnus.Domain.Interfaces.Repositories;
+using Magnus.Domain.Interfaces.Services;
 using Magnus.Domain.Entities;
 using Magnus.Domain.Exceptions;
 

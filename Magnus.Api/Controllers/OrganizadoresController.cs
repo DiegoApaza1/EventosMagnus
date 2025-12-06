@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Magnus.Application.DTOs;
 using Magnus.Domain.Entities;
-using Magnus.Domain.Interfaces;
+using Magnus.Domain.Interfaces.Repositories;
 using MediatR;
 using Magnus.Application.Features.Organizadores.Commands.CrearOrganizador;
 using Magnus.Application.Features.Organizadores.Queries.ObtenerOrganizadorPorId;

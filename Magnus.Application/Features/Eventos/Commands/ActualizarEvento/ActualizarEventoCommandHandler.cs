@@ -1,6 +1,7 @@
-using Magnus.Domain.Interfaces;
+using AutoMapper;
+using Magnus.Domain.Interfaces.Repositories;
+using Magnus.Domain.Interfaces.Services;
 using Magnus.Application.DTOs;
-using Magnus.Application.Mappers;
 using MediatR;
 
 namespace Magnus.Application.Features.Eventos.Commands.ActualizarEvento
@@ -8,10 +9,12 @@ namespace Magnus.Application.Features.Eventos.Commands.ActualizarEvento
     public class ActualizarEventoCommandHandler : IRequestHandler<ActualizarEventoCommand, EventoResponseDto>
     {
         private readonly IUnitOfWork _uow;
+        private readonly IMapper _mapper;
 
-        public ActualizarEventoCommandHandler(IUnitOfWork uow)
+        public ActualizarEventoCommandHandler(IUnitOfWork uow, IMapper mapper)
         {
             _uow = uow;
+            _mapper = mapper;
         }
 
         public async Task<EventoResponseDto> Handle(ActualizarEventoCommand command, CancellationToken ct = default)
@@ -31,7 +34,7 @@ namespace Magnus.Application.Features.Eventos.Commands.ActualizarEvento
 
             await _uow.CommitAsync();
 
-            return evento.ToResponseDto();
+            return _mapper.Map<EventoResponseDto>(evento);
         }
     }
 }

@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Magnus.Application.DTOs;
-using Magnus.Application.Mappers;
 using Magnus.Application.Features.Usuarios.Commands.RegistrarUsuario;
 using Magnus.Application.Features.Usuarios.Commands.LoginUsuario;
 using Magnus.Application.Features.Usuarios.Commands.SolicitarRestablecimientoPassword;

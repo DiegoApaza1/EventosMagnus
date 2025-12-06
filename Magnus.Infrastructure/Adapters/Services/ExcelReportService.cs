@@ -1,5 +1,5 @@
 using ClosedXML.Excel;
-using Magnus.Domain.Interfaces;
+using Magnus.Domain.Interfaces.Services;
 
 namespace Magnus.Infrastructure.Adapters.Services
 {

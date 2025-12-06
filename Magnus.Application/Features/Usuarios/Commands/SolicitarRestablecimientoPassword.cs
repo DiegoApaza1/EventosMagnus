@@ -4,7 +4,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Magnus.Application.DTOs;
-using Magnus.Domain.Interfaces;
+using Magnus.Domain.Interfaces.Repositories;
+using Magnus.Domain.Interfaces.Services;
 using Magnus.Domain.Entities;
 using Magnus.Domain.Exceptions;
 

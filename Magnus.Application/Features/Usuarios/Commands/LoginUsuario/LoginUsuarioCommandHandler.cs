@@ -3,9 +3,10 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Magnus.Domain.Interfaces;
+using AutoMapper;
+using Magnus.Domain.Interfaces.Repositories;
+using Magnus.Domain.Interfaces.Services;
 using Magnus.Application.DTOs;
-using Magnus.Application.Mappers;
 using MediatR;
 
 namespace Magnus.Application.Features.Usuarios.Commands.LoginUsuario
@@ -14,11 +15,13 @@ namespace Magnus.Application.Features.Usuarios.Commands.LoginUsuario
     {
         private readonly IUnitOfWork _uow;
         private readonly ITokenService _tokenService;
+        private readonly IMapper _mapper;
 
-        public LoginUsuarioCommandHandler(IUnitOfWork uow, ITokenService tokenService)
+        public LoginUsuarioCommandHandler(IUnitOfWork uow, ITokenService tokenService, IMapper mapper)
         {
             _uow = uow;
             _tokenService = tokenService;
+            _mapper = mapper;
         }
 
         public async Task<LoginResponseDto> Handle(LoginUsuarioCommand command, CancellationToken ct)
@@ -42,7 +45,7 @@ namespace Magnus.Application.Features.Usuarios.Commands.LoginUsuario
             {
                 Token = token,
                 ExpiresAtUtc = DateTime.UtcNow.AddMinutes(60),
-                User = user.ToResponseDto()
+                User = _mapper.Map<UsuarioResponseDto>(user)
             };
         }
 

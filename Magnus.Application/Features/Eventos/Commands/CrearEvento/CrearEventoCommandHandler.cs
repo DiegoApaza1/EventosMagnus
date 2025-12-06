@@ -1,9 +1,10 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Magnus.Domain.Interfaces;
+using AutoMapper;
+using Magnus.Domain.Interfaces.Repositories;
+using Magnus.Domain.Interfaces.Services;
 using Magnus.Application.DTOs;
-using Magnus.Application.Mappers;
 using Magnus.Domain.Entities;
 using MediatR;
 
@@ -13,10 +14,12 @@ namespace Magnus.Application.Features.Eventos.Commands.CrearEvento
     {
         private readonly IUnitOfWork _uow;
         private readonly IEmailService? _emailService;
+        private readonly IMapper _mapper;
 
-        public CrearEventoCommandHandler(IUnitOfWork uow, IEmailService? emailService = null)
+        public CrearEventoCommandHandler(IUnitOfWork uow, IMapper mapper, IEmailService? emailService = null)
         {
             _uow = uow;
+            _mapper = mapper;
             _emailService = emailService;
         }
 
@@ -42,7 +45,7 @@ namespace Magnus.Application.Features.Eventos.Commands.CrearEvento
                 _ = _emailService.SendEmailAsync(organizador.Email, subject, body);
             }
 
-            return evento.ToResponseDto();
+            return _mapper.Map<EventoResponseDto>(evento);
         }
     }
 }

@@ -1,4 +1,4 @@
-namespace Magnus.Domain.Interfaces
+namespace Magnus.Domain.Interfaces.Services
 {
     public interface IReportService
     {

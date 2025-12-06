@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using Magnus.Domain.Interfaces;
+using Magnus.Domain.Interfaces.Services;
 
 namespace Magnus.Infrastructure.Adapters.Services
 {

@@ -1,6 +1,7 @@
 using Magnus.Application.DTOs;
 using Magnus.Domain.Entities;
-using Magnus.Domain.Interfaces;
+using Magnus.Domain.Interfaces.Repositories;
+using Magnus.Domain.Interfaces.Services;
 using MediatR;
 
 namespace Magnus.Application.Features.Organizadores.Commands.CrearOrganizador

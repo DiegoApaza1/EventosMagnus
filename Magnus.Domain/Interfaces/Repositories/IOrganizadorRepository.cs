@@ -2,7 +2,7 @@ using Magnus.Domain.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Magnus.Domain.Interfaces
+namespace Magnus.Domain.Interfaces.Repositories
 {
     public interface IOrganizadorRepository
     {

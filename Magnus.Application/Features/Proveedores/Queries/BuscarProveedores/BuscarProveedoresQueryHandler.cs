@@ -1,4 +1,5 @@
-using Magnus.Domain.Interfaces;
+using Magnus.Domain.Interfaces.Repositories;
+using Magnus.Domain.Interfaces.Services;
 using Magnus.Domain.Entities;
 using MediatR;
 

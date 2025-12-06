@@ -5,7 +5,8 @@ using Magnus.Infrastructure.Adapters.Persistence.DbContexts;
 using Magnus.Infrastructure.Adapters.Persistence.Repositories;
 using Magnus.Infrastructure.Adapters.Services;
 using Microsoft.EntityFrameworkCore;
-using Magnus.Domain.Interfaces;
+using Magnus.Domain.Interfaces.Repositories;
+using Magnus.Domain.Interfaces.Services;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -31,6 +32,8 @@ Console.WriteLine($"[DEBUG] Using connection to: {connectionString?.Split(';')[0
 
 builder.Services.AddDbContext<MagnusDbContext>(options =>
     options.UseNpgsql(connectionString));
+
+builder.Services.AddAutoMapper(Assembly.Load("Magnus.Application"));
 
 builder.Services.AddMediatR(cfg => 
     cfg.RegisterServicesFromAssembly(Assembly.Load("Magnus.Application")));

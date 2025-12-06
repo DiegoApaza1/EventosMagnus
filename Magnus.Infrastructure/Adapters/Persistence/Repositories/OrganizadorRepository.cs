@@ -1,5 +1,5 @@
 using Magnus.Domain.Entities;
-using Magnus.Domain.Interfaces;
+using Magnus.Domain.Interfaces.Repositories;
 using Magnus.Infrastructure.Adapters.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 

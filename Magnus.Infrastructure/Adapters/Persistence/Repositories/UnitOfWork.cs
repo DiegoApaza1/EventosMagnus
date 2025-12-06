@@ -1,4 +1,4 @@
-using Magnus.Domain.Interfaces;
+using Magnus.Domain.Interfaces.Repositories;
 using Magnus.Infrastructure.Adapters.Persistence.DbContexts;
 
 namespace Magnus.Infrastructure.Adapters.Persistence.Repositories
@@ -13,6 +13,7 @@ namespace Magnus.Infrastructure.Adapters.Persistence.Repositories
             Usuarios = new UsuarioRepository(_context);
             Organizadores = new OrganizadorRepository(_context);
             Eventos = new EventoRepository(_context);
+            EventoInvitados = new EventoInvitadoRepository(_context);
             Proveedores = new ProveedorRepository(_context);
             Cotizaciones = new CotizacionRepository(_context);
         }
@@ -20,6 +21,7 @@ namespace Magnus.Infrastructure.Adapters.Persistence.Repositories
         public IUsuarioRepository Usuarios { get; }
         public IOrganizadorRepository Organizadores { get; }
         public IEventoRepository Eventos { get; }
+        public IEventoInvitadoRepository EventoInvitados { get; }
         public IProveedorRepository Proveedores { get; }
         public ICotizacionRepository Cotizaciones { get; }
 

@@ -1,7 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Magnus.Domain.Interfaces;
-using Magnus.Application.Mappers;
+using AutoMapper;
+using Magnus.Domain.Interfaces.Repositories;
+using Magnus.Domain.Interfaces.Services;
 using MediatR;
 
 namespace Magnus.Application.Features.Reportes.GenerarReporteEventos
@@ -10,11 +11,13 @@ namespace Magnus.Application.Features.Reportes.GenerarReporteEventos
     {
         private readonly IUnitOfWork _uow;
         private readonly IReportService _reportService;
+        private readonly IMapper _mapper;
 
-        public GenerarReporteEventosQueryHandler(IUnitOfWork uow, IReportService reportService)
+        public GenerarReporteEventosQueryHandler(IUnitOfWork uow, IReportService reportService, IMapper mapper)
         {
             _uow = uow;
             _reportService = reportService;
+            _mapper = mapper;
         }
 
         public async Task<(byte[] FileBytes, string FileName)> Handle(GenerarReporteEventosQuery query, CancellationToken ct)
@@ -23,7 +26,7 @@ namespace Magnus.Application.Features.Reportes.GenerarReporteEventos
                 ? await _uow.Eventos.GetByOrganizadorIdAsync(query.OrganizadorId.Value)
                 : await _uow.Eventos.GetAllAsync();
 
-            var eventosDto = eventos.ToResponseDtoList();
+            var eventosDto = _mapper.Map<IEnumerable<Magnus.Application.DTOs.EventoResponseDto>>(eventos);
             return await _reportService.GenerarReporteEventosAsync(eventosDto, "ReporteEventos");
         }
     }

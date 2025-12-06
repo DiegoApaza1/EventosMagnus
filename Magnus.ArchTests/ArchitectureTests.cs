@@ -28,7 +28,7 @@ namespace Magnus.ArchTests
         [Fact]
         public void Application_Depends_Only_On_Domain()
         {
-            var result = Types.InAssembly(typeof(Magnus.Domain.Interfaces.IUnitOfWork).Assembly)
+            var result = Types.InAssembly(typeof(Magnus.Domain.Interfaces.Repositories.IUnitOfWork).Assembly)
                 .Should()
                 .NotHaveDependencyOnAny(InfrastructureNs, ApiNs)
                 .GetResult();
@@ -80,7 +80,7 @@ namespace Magnus.ArchTests
         {
             var result = Types.InAssembly(typeof(Magnus.Infrastructure.Adapters.Persistence.Repositories.UnitOfWork).Assembly)
                 .That()
-                .ImplementInterface(typeof(Magnus.Domain.Interfaces.IUnitOfWork))
+                .ImplementInterface(typeof(Magnus.Domain.Interfaces.Repositories.IUnitOfWork))
                 .Should()
                 .ResideInNamespace(InfrastructureNs)
                 .GetResult();

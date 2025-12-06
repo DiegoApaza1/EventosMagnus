@@ -1,5 +1,5 @@
 using Magnus.Application.DTOs;
-using Magnus.Domain.Interfaces;
+using Magnus.Domain.Interfaces.Repositories;
 using MediatR;
 
 namespace Magnus.Application.Features.Organizadores.Queries.ObtenerEstadisticasOrganizador;

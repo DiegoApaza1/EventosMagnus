@@ -29,7 +29,7 @@ public class ObtenerEstadisticasOrganizadorQueryHandler
         {
             EventosOrganizados = 0,
             IngresosTotales = 0,
-            RatingPromedio = organizador.Rating,
+            RatingPromedio = (double)organizador.Rating,
             ClientesSatisfechos = 0,
             EventosPendientes = 0,
             EventosProximos = 0

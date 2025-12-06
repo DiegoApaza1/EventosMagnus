@@ -21,6 +21,10 @@ namespace Magnus.Application.Features.Organizadores.Commands.CrearOrganizador
             if (usuario == null)
                 throw new InvalidOperationException("Usuario no encontrado");
 
+            var organizadorExistente = await _uow.Organizadores.GetByUsuarioIdAsync(request.UsuarioId);
+            if (organizadorExistente != null)
+                throw new InvalidOperationException("Este usuario ya está registrado como organizador");
+
             var organizador = new Organizador(
                 request.UsuarioId,
                 request.NombreEmpresa,

@@ -5,6 +5,7 @@ using Magnus.Domain.Interfaces.Repositories;
 using MediatR;
 using Magnus.Application.Features.Organizadores.Commands.CrearOrganizador;
 using Magnus.Application.Features.Organizadores.Queries.ObtenerOrganizadorPorId;
+using Magnus.Application.Features.Organizadores.Queries.ObtenerOrganizadorPorUsuarioId;
 using Magnus.Application.Features.Organizadores.Queries.ListarOrganizadores;
 
 namespace Magnus.Api.Controllers
@@ -70,6 +71,24 @@ namespace Magnus.Api.Controllers
             var organizadores = await _mediator.Send(query);
 
             var response = ApiResponse<IEnumerable<OrganizadorResponseDto>>.SuccessResponse(organizadores);
+            return Ok(response);
+        }
+
+        [HttpGet("usuario/{usuarioId}")]
+        [ProducesResponseType(typeof(ApiResponse<OrganizadorResponseDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> ObtenerOrganizadorPorUsuarioId(Guid usuarioId)
+        {
+            var query = new ObtenerOrganizadorPorUsuarioIdQuery(usuarioId);
+            var organizador = await _mediator.Send(query);
+
+            if (organizador == null)
+            {
+                var error = ApiResponse<object>.ErrorResponse($"No se encontró un organizador para el usuario con ID {usuarioId}");
+                return NotFound(error);
+            }
+
+            var response = ApiResponse<OrganizadorResponseDto>.SuccessResponse(organizador);
             return Ok(response);
         }
     }

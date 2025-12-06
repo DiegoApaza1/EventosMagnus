@@ -8,7 +8,7 @@ namespace Magnus.Domain.Interfaces.Repositories
     {
         Task<IEnumerable<Organizador>> GetAllAsync();
         Task<Organizador?> GetByIdAsync(Guid id);
-
+        Task<Organizador?> GetByUsuarioIdAsync(Guid usuarioId);
         Task<IEnumerable<Organizador>> SearchByNameAsync(string nombre);
 
         Task AddAsync(Organizador organizador);

@@ -20,6 +20,9 @@ namespace Magnus.Infrastructure.Adapters.Persistence.Repositories
         public async Task<Organizador?> GetByIdAsync(Guid id)
             => await _context.Organizadores.FindAsync(id);
 
+        public async Task<Organizador?> GetByUsuarioIdAsync(Guid usuarioId)
+            => await _context.Organizadores.FirstOrDefaultAsync(o => o.UsuarioId == usuarioId);
+
         public async Task<IEnumerable<Organizador>> SearchByNameAsync(string nombre)
             => await _context.Organizadores
                 .Where(o => o.NombreEmpresa.Contains(nombre))
